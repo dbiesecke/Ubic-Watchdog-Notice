@@ -1,4 +1,17 @@
 # Ubic::Watchdog::Notice
+===============================
+* Fork of Ubic::Watchdog::Notice
+
+Todo
+======
+- Call REST API from [Towncrier](https://github.com/fastmail/towncrier/tree/master/lib/TownCrier)
+
+
+
+
+
+
+
 Ubic::Watchdog::Notice - Notice service for ubic. Currently module can notice by email and to [HIPCHAT](https://www.hipchat.com) or [SLACK](https://slack.com) service.
 
 ## Installation
@@ -54,7 +67,50 @@ Start it:
 		channel  => '#CHANNEL_NAME'
 		username => 'Ubic Server Bot'
 	},
-    
+
+	
+
+	
+## Towncrier
+==================
+
+
+
+* Service ADD
+
+        curl -XPOST --data 'name=up&description=dasisttest&icon=ok' 'http://admin:secret@btc-mining.at:3000/admin/api/v1/statuses' 
+        {
+            "url" : "/statuses/up",
+            "id" : "up",
+            "icon" : "ok-sign",
+            "name" : "up",
+            "description" : "dasisttest"
+        }
+  
+        curl -XPOST --data 'name=ping&description=blabla' 'http://admin:secret@btc-mining.at:3000/admin/api/v1/services'
+        {
+            "status" : null,
+            "description" : "blabla",
+            "id" : "ping",
+            "group" : null,
+            "name" : "ping",
+            "order" : 0,
+            "event" : null,
+            "url" : "/services/ping"
+        }
+
+
+
+* CREATE
+
+         curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@btc-mining.at:3000/admin/api/v1/statuses
+
+
+* DELTE 
+
+        curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@btc-mining.at:3000/admin/api/v1/statuses' 
+
+        
 
 ## Source repository
 <https://github.com/likhatskiy/Ubic-Watchdog-Notice> 
