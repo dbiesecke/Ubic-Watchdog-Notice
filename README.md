@@ -1,23 +1,45 @@
 # Ubic::Watchdog::Notice
 ===============================
-* Fork of Ubic::Watchdog::Notice
+* Fork of Ubic::Watchdog::Notice to integrat [Towncrier](https://github.com/fastmail/towncrier/tree/master/lib/TownCrier)
+
+Done
+=====
+* If `ubic-notice` started, added all ubic services to towncrier.
+* Wait on Watchdog if some service failed
+
+
+
 
 Todo
 ======
-- Call REST API from [Towncrier](https://github.com/fastmail/towncrier/tree/master/lib/TownCrier)
+- Group Services    `/admin/api/v1/groups`
+ 
 
-
-
-
-
-
-
-Ubic::Watchdog::Notice - Notice service for ubic. Currently module can notice by email and to [HIPCHAT](https://www.hipchat.com) or [SLACK](https://slack.com) service.
 
 ## Installation
 
-    cpan -i Ubic::Watchdog::Notice
+    $ cpanm https://github.com/dbiesecke/Ubic-Watchdog-Notice/releases/download/Ubic-Watchdog-towncrier-v0.1/TownCrier-0.5.tar.gz
+    $ towncrier --port=3000 
+    
+    
+    $ cpan -i Ubic::Watchdog::Notice
+    $ cat /etc/ubic/service/ubic/notice
+    use Ubic::Service::SimpleDaemon;
 
+    Ubic::Service::SimpleDaemon->new(
+            bin => ['ubic-notice'],
+    );
+    ubic start ubic.notice
+    
+    
+* open towncrier-panel
+
+![image](image-1.png)
+    
+    
+        
+        
+    
 Put this code in file `/etc/ubic/service/ubic/notice`:
 
     use Ubic::Service::SimpleDaemon;
@@ -78,7 +100,7 @@ Start it:
 
 * Service ADD
 
-        curl -XPOST --data 'name=up&description=dasisttest&icon=ok' 'http://admin:secret@btc-mining.at:3000/admin/api/v1/statuses' 
+        curl -XPOST --data 'name=up&description=dasisttest&icon=ok' 'http://admin:secret@localhost:3000/admin/api/v1/statuses' 
         {
             "url" : "/statuses/up",
             "id" : "up",
@@ -87,7 +109,7 @@ Start it:
             "description" : "dasisttest"
         }
   
-        curl -XPOST --data 'name=ping&description=blabla' 'http://admin:secret@btc-mining.at:3000/admin/api/v1/services'
+        curl -XPOST --data 'name=ping&description=blabla' 'http://admin:secret@localhost:3000/admin/api/v1/services'
         {
             "status" : null,
             "description" : "blabla",
@@ -103,12 +125,12 @@ Start it:
 
 * CREATE
 
-         curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@btc-mining.at:3000/admin/api/v1/statuses
+         curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@localhost:3000/admin/api/v1/statuses
 
 
 * DELTE 
 
-        curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@btc-mining.at:3000/admin/api/v1/statuses' 
+        curl -XPOST --data 'name=online&description=dasisttest&icon=ok&path=/test' 'http://bob:hacks@localhost:3000/admin/api/v1/statuses' 
 
         
 
