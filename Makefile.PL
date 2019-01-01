@@ -17,5 +17,6 @@ WriteMakefile(
 		'MIME::Lite'     => 0,
 		'URI'            => 0,
 		'LWP::UserAgent' => 0,
+		'Test2::API'	=> 0,
 	},
 );
