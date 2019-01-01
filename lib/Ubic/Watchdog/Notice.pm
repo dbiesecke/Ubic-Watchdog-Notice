@@ -98,7 +98,17 @@ sub run {
 
     foreach my $service ($val->services()) {
             my $counter = 0;
+#             next if not ($service->{"services"});
+#             if(!($service->services())) { next; };
+                my $url1 = URI->new("http://".$conf->{towncrier}->{creds}.'@'.$conf->{towncrier}->{url}."/admin/api/v1/groups");
+                $url1->query_form(%{ name => $service->name , description => "bla"});
+               my $resp = $ua->post($url1);
+#            unless ($resp->is_success) {
+#                     warn $response->status_line;
+#                     warn $response->content;
+#                 }                   
             foreach my $subservices ($service->services()) { $counter++;
+#                 next if 
                 my $name = $service->name.".".$subservices->name;
                 print $name."\tKnown: ".service_status($kservices,$name)."\n";      
 #                 print Dumper($kservices)."\n";
@@ -133,8 +143,7 @@ sub run {
             }
             next if not ( $service->name );
             next if ($counter != 0);
-#             next if (know_service($kservices,$service->name) eq true);
-#             print "Known: ".know_service($kservices, $service->name)."\n";         
+        
                 my $name = $service->name;
                 next if ( (service_status($kservices,$name) eq "Up") && (Ubic->cached_status($name)->status eq 'running') );
                 next if ( (service_status($kservices,$name) eq "Down") && (Ubic->cached_status($name)->status eq 'broken') );
@@ -142,7 +151,6 @@ sub run {
                 my $init;
         
                if(Ubic->cached_status($name)->status eq 'running') { # should read status from static file on disk
-#                     print Dumper($status)."\n";                   
                     $init->{status} ||= "up";	                    
                     $init->{message} ||= "[NOTICE] $name is up and running"; 
                 }else {
@@ -151,16 +159,15 @@ sub run {
                 }
 
                 $init->{service} = $name;
-#                 $init->{description} ||= "SingleService";
 
                 my $url = URI->new("http://".$conf->{towncrier}->{creds}.'@'.$conf->{towncrier}->{url}."/admin/event");
                 $url->query_form(%$init);
                 my $response = $ua->post($url);
-                unless ($response->is_success) {
-                    warn "towncrier Init2 failed!";
-                    warn $response->status_line;
-                    warn $response->content;
-                }      
+#                 unless ($response->is_success) {
+#                     warn "towncrier Init2 failed!";
+#                     warn $response->status_line;
+#                     warn $response->content;
+#                 }      
 
     };
 #     exit;
@@ -230,20 +237,33 @@ sub notice {
 # 		my $url1 = URI->new("http://".$default->{towncrier}->{url}.'@'.$default->{towncrier}->{url}"/admin/api/v1/groups");
 # 		$url->query_form(%$t);
 # 		my $response1 = $ua->get($url);	
-        my $bla; my $init;
-        $init->{name} = $service;
-        $init->{description} ||= "Temp";
-        $bla->{service} = $service;
+        $service =~ s/\./-/g;
+        my $bla; 
+#         my $init;
+#         $init->{name} = $service;
+#         $init->{description} ||= "Temp";
+        $bla->{service} = $nservice;
 
 #         $test->{service} = $service;
-        $bla->{status} ||= "warn";	
-        $bla->{message} ||= "restarting $service"; 
+        $bla->{status} ||= "warning";	
+        $bla->{message} ||= "restarting"; 
         $bla->{host} ||= "test";
                 print "$nservice\n".Dumper(%$bla)."\n";
         my $nurl = URI->new("http://".$conf->{towncrier}->{creds}.'@'.$conf->{towncrier}->{url}."/admin/event");
 		$nurl->query_form(%$bla);
 		$response = $ua->post($nurl);
-
+# 		sleep(10);
+# 		 $bla->{status} = "up";
+# 		 $bla->{message} = "restart done"; 
+# 
+# 		$nurl->query_form(%$bla);
+		$response = $ua->post($nurl);
+#         unless ($response->is_success) {
+#                 warn "towncrier Init2 failed!";
+#             warn $response->status_line;
+#             warn $response->content;
+#         }    
+#         print $response->content."\n";
     }
 	
 	
